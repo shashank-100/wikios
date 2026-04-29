@@ -2,13 +2,13 @@
   "version": 2,
   "builds": [
     { "src": "api/server.js", "use": "@vercel/node" },
-    { "src": "ui/**", "use": "@vercel/static" }
+    { "src": "ui/index.html", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "api/server.js" },
+    { "src": "/health", "dest": "api/server.js" },
+    { "src": "/workspaces(.*)", "dest": "api/server.js" },
+    { "src": "/workspace(.*)", "dest": "api/server.js" },
+    { "src": "/waitlist", "dest": "api/server.js" },
     { "src": "/(.*)", "dest": "ui/index.html" }
-  ],
-  "env": {
-    "ANTHROPIC_API_KEY": "@anthropic_api_key"
-  }
+  ]
 }
