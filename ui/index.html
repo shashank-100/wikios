@@ -320,26 +320,7 @@
     /* ── KARPATHY ── */
     .karpathy-section {
       background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-      padding: 80px 24px;
-    }
-    .karpathy-inner {
-      max-width: 880px; margin: 0 auto;
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 64px; align-items: center;
-    }
-    .karpathy-desc {
-      font-size: 15px; color: var(--muted); line-height: 1.75;
-      margin-bottom: 16px;
-    }
-    .karpathy-desc strong { color: var(--text); font-weight: 600; }
-    .karpathy-desc em { font-style: italic; }
-    .karpathy-graph {
-      background: #fff; border: 1px solid var(--border);
-      border-radius: 14px; padding: 24px;
-      box-shadow: 0 4px 20px rgba(0,0,0,.05);
-    }
-    @media (max-width: 720px) {
-      .karpathy-inner { grid-template-columns: 1fr; gap: 32px; }
+      padding: 64px 24px;
     }
 
     /* ── HOW IT WORKS ── */
@@ -644,21 +625,13 @@
 
 <!-- KARPATHY SECTION -->
 <div class="karpathy-section">
-  <div class="karpathy-inner">
-    <div class="karpathy-text">
-      <div class="section-eyebrow">The science behind it</div>
-      <div class="section-title" style="margin-bottom:16px">Built on Karpathy's<br>LLM Wiki pattern</div>
-      <p class="karpathy-desc">Andrej Karpathy observed that LLMs are uniquely good at the <em>tedious</em> part of knowledge management — bookkeeping, cross-referencing, maintaining indexes. The insight: let the AI be an active <strong>maintainer</strong>, not just a retriever.</p>
-      <p class="karpathy-desc">WikiOS productizes this pattern. Every document ingested doesn't just get stored — it gets woven into the graph. Concepts link to entities. Sources link to analyses. New documents retroactively enrich everything that came before.</p>
-      <p class="karpathy-desc" style="margin-bottom:0">The result: a knowledge base that compounds in value over time, instead of rotting like every wiki you've ever seen.</p>
-    </div>
-    <div class="karpathy-graph">
-      <img
-        src="https://raw.githubusercontent.com/CompleteTech-LLC-AI-Research/beyond-the-token-bottleneck/master/assets/graph-color-groups.png"
-        alt="Knowledge graph showing sources, concepts, and entities interlinked"
-        style="width:100%; border-radius:8px; display:block;"
-      />
-    </div>
+  <div style="max-width:900px; margin:0 auto; text-align:center;">
+    <img
+      src="https://raw.githubusercontent.com/CompleteTech-LLC-AI-Research/beyond-the-token-bottleneck/master/assets/graph-color-groups.png"
+      alt="Knowledge graph — 27 research papers interlinked across sources, concepts, and entities with 1,400+ cross-references"
+      style="width:100%; border-radius:12px; display:block; box-shadow: 0 4px 32px rgba(0,0,0,.08);"
+    />
+    <p style="margin-top:16px; font-size:13px; color:var(--muted);">27 papers · 120+ pages · 1,400+ cross-references · self-maintaining</p>
   </div>
 </div>
 
