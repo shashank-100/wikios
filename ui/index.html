@@ -4,658 +4,639 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WikiOS — AI-Maintained Knowledge Base</title>
-  <meta name="description" content="Drop in PDFs and docs. WikiOS builds a living, interlinked knowledge graph that grows smarter with every document — zero manual maintenance." />
+  <meta name="description" content="Drop in documents. Get back a self-updating knowledge graph that stays current automatically." />
   <meta property="og:title" content="WikiOS — The knowledge base that maintains itself" />
-  <meta property="og:description" content="Drop in documents. Get back a self-updating, deeply interlinked knowledge graph that compounds over time." />
+  <meta property="og:description" content="Drop in documents. Get back a self-updating knowledge graph that stays current automatically." />
   <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="WikiOS — The knowledge base that maintains itself" />
-  <meta name="twitter:description" content="Drop in PDFs and docs. AI builds a living wiki that stays current automatically." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #0d0d0d;
-      --bg2:     #141414;
-      --bg3:     #1c1c1c;
-      --border:  #2a2a2a;
-      --border2: #333;
-      --accent:  #0ea5e9;   /* sky blue */
-      --accent2: #38bdf8;
-      --text:    #ededed;
-      --muted:   #777;
-      --green:   #22c55e;
-      --yellow:  #eab308;
-      --red:     #ef4444;
+      --bg:       #ffffff;
+      --bg2:      #f7f7f5;
+      --bg3:      #f0f0ec;
+      --border:   #e8e8e4;
+      --text:     #1a1a1a;
+      --muted:    #888;
+      --muted2:   #aaa;
+      --accent:   #1a1a1a;
+      --green:    #16a34a;
+      --radius:   10px;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+      font-family: "Inter", -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
-      line-height: 1.5;
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* ── NAV ── */
     nav {
-      position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 40px;
-      background: rgba(13,13,13,.9);
-      backdrop-filter: blur(16px);
+      padding: 0 40px; height: 56px;
       border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
     }
     .nav-logo {
-      font-size: 16px; font-weight: 700;
-      letter-spacing: -.02em;
-      display: flex; align-items: center; gap: 8px;
+      font-family: "Instrument Serif", serif;
+      font-size: 20px; color: var(--text);
+      text-decoration: none; letter-spacing: -.01em;
     }
-    .nav-logo-mark {
-      width: 26px; height: 26px;
-      background: var(--accent);
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 800; color: #000;
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-link {
+      font-size: 14px; color: var(--muted); text-decoration: none;
+      padding: 6px 12px; border-radius: 6px;
+      transition: color .15s, background .15s;
     }
-    .nav-links { display: flex; gap: 28px; align-items: center; }
-    .nav-links a { font-size: 14px; color: var(--muted); text-decoration: none; transition: color .15s; }
-    .nav-links a:hover { color: var(--text); }
-
-    /* ── BUTTONS ── */
-    .btn {
-      padding: 10px 22px;
-      border-radius: 7px;
-      font-size: 14px; font-weight: 600;
-      cursor: pointer; border: none;
-      transition: opacity .15s, transform .1s;
+    .nav-link:hover { color: var(--text); background: var(--bg2); }
+    .nav-cta {
+      font-size: 14px; font-weight: 500;
+      background: var(--text); color: #fff;
+      border: none; border-radius: 99px;
+      padding: 8px 20px; cursor: pointer;
       text-decoration: none;
-      display: inline-flex; align-items: center; gap: 7px;
+      transition: opacity .15s;
     }
-    .btn:hover { opacity: .88; transform: translateY(-1px); }
-    .btn-primary { background: var(--accent); color: #000; }
-    .btn-ghost {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border2);
-    }
-    .btn-ghost:hover { border-color: #555; }
-    .btn-sm { padding: 7px 14px; font-size: 13px; }
-
-    /* ── SOCIAL PROOF BAR ── */
-    .proof-bar {
-      display: flex; gap: 0; justify-content: center;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg2);
-      overflow: hidden;
-    }
-    .proof-item {
-      font-size: 12px; color: var(--muted);
-      padding: 10px 28px;
-      border-right: 1px solid var(--border);
-      white-space: nowrap;
-      display: flex; align-items: center; gap: 7px;
-    }
-    .proof-item:last-child { border-right: none; }
-    .proof-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--green); flex-shrink: 0;
-      box-shadow: 0 0 6px var(--green);
-    }
+    .nav-cta:hover { opacity: .82; }
 
     /* ── HERO ── */
     .hero {
       text-align: center;
-      padding: 96px 24px 72px;
-      position: relative;
-      overflow: hidden;
+      padding: 80px 24px 72px;
+      max-width: 760px; margin: 0 auto;
     }
-    .hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(14,165,233,.1) 0%, transparent 65%);
-      pointer-events: none;
+    .hero-social-icons {
+      display: flex; justify-content: center; align-items: center;
+      gap: 10px; margin-bottom: 36px; flex-wrap: wrap;
     }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(14,165,233,.1);
-      border: 1px solid rgba(14,165,233,.25);
-      border-radius: 99px;
-      padding: 5px 14px;
-      font-size: 12px; color: var(--accent2);
-      margin-bottom: 28px;
-      letter-spacing: .05em; text-transform: uppercase;
+    .hero-social-icons span {
+      font-size: 13px; color: var(--muted);
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 6px; padding: 4px 12px;
+      display: inline-flex; align-items: center; gap: 5px;
     }
     .hero h1 {
-      font-size: clamp(2.6rem, 6.5vw, 4.2rem);
-      font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: -.03em;
-      margin-bottom: 22px;
-      color: #fff;
-    }
-    .hero h1 em { font-style: normal; color: var(--accent2); }
-    .hero p {
-      font-size: 1.1rem; color: var(--muted);
-      max-width: 500px; margin: 0 auto 40px;
-      line-height: 1.7;
-    }
-    .hero-cta {
-      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
-    }
-
-    /* ── SECTIONS ── */
-    .section { padding: 72px 24px; max-width: 1040px; margin: 0 auto; }
-    .section-label {
-      font-size: 11px; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--accent);
-      margin-bottom: 10px; font-weight: 600;
-    }
-    .section h2 {
-      font-size: 1.9rem; font-weight: 700;
+      font-family: "Instrument Serif", serif;
+      font-size: clamp(3rem, 7vw, 5rem);
+      font-weight: 400;
+      line-height: 1.05;
       letter-spacing: -.02em;
-      margin-bottom: 44px; color: #fff;
+      color: var(--text);
+      margin-bottom: 20px;
     }
+    .hero h1 em { font-style: italic; }
+    .hero p {
+      font-size: 17px; color: var(--muted);
+      max-width: 440px; margin: 0 auto 36px;
+      line-height: 1.65;
+    }
+    .hero-cta-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+    }
+    .btn-hero {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--text); color: #fff;
+      font-size: 15px; font-weight: 500;
+      border: none; border-radius: 99px;
+      padding: 13px 32px; cursor: pointer;
+      text-decoration: none;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn-hero:hover { opacity: .85; transform: translateY(-1px); }
+    .social-proof {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; color: var(--muted);
+    }
+    .avatars { display: flex; }
+    .avatars .av {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 2px solid #fff;
+      margin-left: -8px; font-size: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600; color: #fff;
+    }
+    .avatars .av:first-child { margin-left: 0; }
+    .av1 { background: #4f46e5; }
+    .av2 { background: #0891b2; }
+    .av3 { background: #15803d; }
+    .av4 { background: #b45309; }
+    .av5 { background: #9f1239; }
 
-    /* ── HOW IT WORKS ── */
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 1px;
-      background: var(--border);
+    /* ── PRODUCT SCREENSHOT ── */
+    .screenshot-wrap {
+      max-width: 880px; margin: 0 auto 80px;
+      padding: 0 24px;
+    }
+    .screenshot-inner {
       border: 1px solid var(--border);
-      border-radius: 12px; overflow: hidden;
-    }
-    .step {
-      background: var(--bg2);
-      padding: 28px 24px;
-    }
-    .step-num {
-      font-size: 11px; font-weight: 700;
-      color: var(--accent); letter-spacing: .08em;
-      margin-bottom: 14px; text-transform: uppercase;
-    }
-    .step h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #fff; }
-    .step p { font-size: 13px; color: var(--muted); line-height: 1.65; }
-
-    /* ── STATS ── */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 12px; overflow: hidden;
-      margin: 48px 0;
-    }
-    .stat {
-      background: var(--bg2);
-      padding: 28px 24px; text-align: center;
-    }
-    .stat-num { font-size: 2.2rem; font-weight: 800; color: #fff; }
-    .stat-label { font-size: 12px; color: var(--muted); margin-top: 5px; }
-
-    /* ── DEMO ── */
-    .demo-wrap {
-      background: var(--bg2);
-      border: 1px solid var(--border2);
       border-radius: 14px; overflow: hidden;
-      max-width: 940px; margin: 0 auto;
-      box-shadow: 0 24px 64px rgba(0,0,0,.5);
+      box-shadow: 0 4px 24px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04);
     }
-    .demo-titlebar {
-      background: var(--bg3);
-      border-bottom: 1px solid var(--border);
-      padding: 11px 18px;
-      display: flex; align-items: center; gap: 7px;
+    .ss-titlebar {
+      background: var(--bg2); border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex; align-items: center; gap: 6px;
     }
-    .dot { width: 11px; height: 11px; border-radius: 50%; }
-    .dot-r { background: #ff5f57; }
-    .dot-y { background: #febc2e; }
-    .dot-g { background: #28c840; }
-    .demo-titlebar-text {
-      margin-left: 10px; font-size: 12px; color: var(--muted);
+    .ss-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .ss-dot-r { background: #ff5f57; }
+    .ss-dot-y { background: #febc2e; }
+    .ss-dot-g { background: #28c840; }
+    .ss-url {
       flex: 1; text-align: center;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 5px; padding: 3px 12px;
+      font-size: 12px; color: var(--muted);
+      max-width: 280px; margin: 0 auto;
     }
-
-    .demo-body {
-      display: grid;
-      grid-template-columns: 210px 1fr;
-      min-height: 520px;
+    .ss-body {
+      display: grid; grid-template-columns: 200px 1fr;
+      min-height: 440px;
     }
-    .demo-sidebar {
-      border-right: 1px solid var(--border);
-      padding: 14px 12px;
-      background: var(--bg2);
+    .ss-sidebar {
+      background: var(--bg2); border-right: 1px solid var(--border);
+      padding: 16px 12px;
     }
-    .demo-sidebar h4 {
-      font-size: 10px; letter-spacing: .1em;
-      text-transform: uppercase; color: var(--muted);
-      margin: 14px 8px 6px; font-weight: 600;
+    .ss-sidebar-section {
+      font-size: 10px; font-weight: 600; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--muted2);
+      padding: 12px 8px 6px;
     }
-    .demo-sidebar h4:first-child { margin-top: 2px; }
-    .sidebar-item {
-      padding: 6px 10px;
-      border-radius: 6px; font-size: 13px;
-      cursor: pointer;
+    .ss-sidebar-section:first-child { padding-top: 4px; }
+    .ss-item {
       display: flex; align-items: center; gap: 8px;
-      margin-bottom: 1px; color: var(--muted);
-      transition: background .1s, color .1s;
-      white-space: nowrap; overflow: hidden;
-      text-overflow: ellipsis;
+      padding: 6px 8px; border-radius: 6px;
+      font-size: 13px; color: var(--muted); cursor: pointer;
+      transition: background .1s, color .1s; margin-bottom: 1px;
     }
-    .sidebar-item:hover { background: var(--bg3); color: var(--text); }
-    .sidebar-item.active { background: var(--bg3); color: var(--text); }
-    .dot-type { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .type-source  { background: var(--accent); }
-    .type-concept { background: var(--green); }
-    .type-entity  { background: var(--yellow); }
+    .ss-item:hover { background: var(--bg3); color: var(--text); }
+    .ss-item.active { background: #fff; color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+    .ss-item-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .c-blue   { background: #3b82f6; }
+    .c-green  { background: #22c55e; }
+    .c-orange { background: #f59e0b; }
 
-    .demo-main { padding: 26px 28px; overflow-y: auto; }
+    .ss-main { padding: 28px 32px; background: #fff; overflow-y: auto; }
+    .ss-page-title {
+      font-family: "Instrument Serif", serif;
+      font-size: 22px; font-weight: 400; color: var(--text);
+      margin-bottom: 8px;
+    }
+    .ss-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+    .ss-tag {
+      font-size: 11px; color: var(--muted);
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 2px 8px; font-family: monospace;
+    }
+    .ss-body-text { font-size: 14px; color: #444; line-height: 1.8; }
+    .ss-body-text p { margin-bottom: 12px; }
+    .wl { color: #2563eb; text-decoration: none; border-bottom: 1px solid rgba(37,99,235,.25); }
+    .wl:hover { border-color: #2563eb; }
 
     /* ── TABS ── */
-    .tabs { display: flex; gap: 2px; margin-bottom: 22px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
-    .tab {
-      padding: 8px 16px 10px;
-      font-size: 13px; cursor: pointer;
-      border: none; background: none; color: var(--muted);
-      transition: color .15s; position: relative; font-weight: 500;
+    .ss-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    .ss-tab {
+      font-size: 13px; color: var(--muted); background: none;
+      border: none; cursor: pointer; padding: 9px 16px 10px;
+      position: relative; font-weight: 500;
+      transition: color .15s;
     }
-    .tab:hover { color: var(--text); }
-    .tab.active { color: var(--text); }
-    .tab.active::after {
+    .ss-tab:hover { color: var(--text); }
+    .ss-tab.active { color: var(--text); }
+    .ss-tab.active::after {
       content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
-      height: 2px; background: var(--accent);
+      height: 2px; background: var(--text);
     }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-
-    /* ── WIKI PAGE ── */
-    .page-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 10px; }
-    .page-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
-    .tag {
-      background: var(--bg3); border: 1px solid var(--border2);
-      border-radius: 4px; padding: 3px 9px;
-      font-size: 11px; color: var(--muted); font-family: monospace;
-    }
-    .page-body { font-size: 14px; line-height: 1.85; color: #bbb; }
-    .page-body p { margin-bottom: 14px; }
-    .wikilink {
-      color: var(--accent2); text-decoration: none;
-      border-bottom: 1px solid rgba(56,189,248,.3);
-      cursor: pointer; transition: border-color .15s;
-    }
-    .wikilink:hover { border-color: var(--accent2); }
+    .ss-tab-panel { display: none; }
+    .ss-tab-panel.active { display: block; }
 
     /* ── UPLOAD ── */
-    .upload-desc { font-size: 14px; color: var(--muted); margin-bottom: 18px; line-height: 1.6; }
     .upload-zone {
-      border: 1px dashed var(--border2);
-      border-radius: 10px; padding: 44px 24px;
+      border: 1px dashed var(--border);
+      border-radius: 10px; padding: 40px 24px;
       text-align: center; cursor: pointer;
       transition: border-color .2s, background .2s;
     }
     .upload-zone:hover, .upload-zone.drag-over {
-      border-color: var(--accent);
-      background: rgba(14,165,233,.04);
+      border-color: #aaa; background: var(--bg2);
     }
-    .upload-icon { font-size: 28px; margin-bottom: 10px; }
     .upload-zone p { font-size: 14px; color: var(--muted); }
     .upload-zone strong { color: var(--text); }
-
-    /* ── PROCESSING ── */
     .processing {
-      display: none; align-items: center; gap: 10px;
-      font-size: 13px; color: var(--accent); margin-top: 14px;
+      display: none; align-items: center; gap: 9px;
+      font-size: 13px; color: var(--muted); margin-top: 12px;
     }
     .processing.visible { display: flex; }
     .spinner {
-      width: 15px; height: 15px; flex-shrink: 0;
-      border: 2px solid var(--border2);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin .65s linear infinite;
+      width: 14px; height: 14px; flex-shrink: 0;
+      border: 2px solid var(--border); border-top-color: var(--text);
+      border-radius: 50%; animation: spin .65s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .ingest-result { display: none; margin-top: 14px; font-size: 13px; color: var(--green); }
-    .ingest-result.visible { display: block; }
+    .ingest-ok { display: none; margin-top: 12px; font-size: 13px; color: var(--green); }
+    .ingest-ok.visible { display: block; }
 
     /* ── QUERY ── */
-    .query-desc { font-size: 14px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
-    .query-box { display: flex; gap: 8px; }
+    .query-row { display: flex; gap: 8px; }
     .query-input {
-      flex: 1; background: var(--bg3);
-      border: 1px solid var(--border2); border-radius: 7px;
-      padding: 10px 14px; color: var(--text); font-size: 14px;
-      outline: none; transition: border-color .15s;
+      flex: 1; border: 1px solid var(--border); border-radius: 8px;
+      padding: 9px 14px; font-size: 14px; color: var(--text);
+      background: #fff; outline: none; font-family: inherit;
+      transition: border-color .15s;
     }
-    .query-input:focus { border-color: var(--accent); }
-    .query-input::placeholder { color: var(--muted); }
-    .query-result {
-      display: none; margin-top: 16px;
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 8px; padding: 16px;
-      font-size: 14px; line-height: 1.75; color: #bbb;
+    .query-input:focus { border-color: #aaa; }
+    .query-input::placeholder { color: var(--muted2); }
+    .btn-sm {
+      background: var(--text); color: #fff; border: none;
+      border-radius: 7px; padding: 9px 18px; font-size: 13px;
+      font-weight: 500; cursor: pointer; transition: opacity .15s;
+      font-family: inherit;
     }
-    .query-result.visible { display: block; }
-    .query-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+    .btn-sm:hover { opacity: .82; }
+    .query-answer {
+      display: none; margin-top: 14px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 16px;
+      font-size: 14px; color: #444; line-height: 1.75;
+    }
+    .query-answer.visible { display: block; }
+    .query-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
+    .chip {
+      font-size: 12px; color: var(--muted); background: var(--bg2);
+      border: 1px solid var(--border); border-radius: 99px;
+      padding: 5px 12px; cursor: pointer; font-family: inherit;
+      transition: border-color .15s, color .15s;
+    }
+    .chip:hover { border-color: #aaa; color: var(--text); }
 
     /* ── LOG ── */
     .log-box {
       border: 1px solid var(--border); border-radius: 8px;
-      padding: 14px; max-height: 320px; overflow-y: auto;
-      font-family: "SF Mono", "Fira Code", monospace; font-size: 12px;
+      padding: 12px; font-family: monospace; font-size: 12px;
+      max-height: 300px; overflow-y: auto; background: var(--bg2);
     }
-    .log-entry { padding: 5px 0; border-bottom: 1px solid var(--border); color: var(--muted); }
-    .log-entry:last-child { border-bottom: none; }
-    .log-ts { color: var(--accent); margin-right: 10px; }
+    .log-row { padding: 5px 0; border-bottom: 1px solid var(--border); color: var(--muted); }
+    .log-row:last-child { border-bottom: none; }
+    .log-ts { color: #2563eb; margin-right: 10px; }
 
     /* ── FEATURES ── */
-    .features {
+    .features-section { max-width: 880px; margin: 0 auto; padding: 0 24px 80px; }
+    .section-eyebrow {
+      font-size: 12px; font-weight: 600; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: "Instrument Serif", serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 400; letter-spacing: -.02em;
+      color: var(--text); margin-bottom: 48px; line-height: 1.15;
+    }
+    .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 28px; background: #fff;
+      transition: box-shadow .2s;
+    }
+    .feature-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.07); }
+    .feature-icon { font-size: 20px; margin-bottom: 14px; }
+    .feature-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .feature-card p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+    /* ── HOW IT WORKS ── */
+    .how-section { max-width: 880px; margin: 0 auto; padding: 0 24px 80px; }
+    .steps-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 32px; }
+    .step-item {}
+    .step-num {
+      font-size: 12px; font-weight: 600; color: var(--muted2);
+      margin-bottom: 10px;
+    }
+    .step-item h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+    .step-item p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+    /* ── STATS ── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 1px; background: var(--border);
       border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+      max-width: 880px; margin: 0 auto 80px;
     }
-    .feature { background: var(--bg2); padding: 28px 26px; }
-    .feature-icon { font-size: 22px; margin-bottom: 14px; }
-    .feature h3 { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 8px; }
-    .feature p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+    .stat-cell {
+      background: #fff; padding: 28px 24px; text-align: center;
+    }
+    .stat-num {
+      font-family: "Instrument Serif", serif;
+      font-size: 2.4rem; color: var(--text); line-height: 1;
+    }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 6px; }
 
     /* ── PRICING ── */
-    .pricing {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    .pricing-section { max-width: 880px; margin: 0 auto; padding: 0 24px 80px; }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 16px;
     }
     .plan {
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 30px;
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 28px; background: #fff;
     }
-    .plan.featured { border-color: var(--accent); }
-    .plan-featured-badge {
-      font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
-      color: var(--accent); font-weight: 700;
+    .plan.featured { border-color: var(--text); }
+    .plan-badge {
+      font-size: 10px; font-weight: 600; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--text);
       margin-bottom: 10px; display: block;
     }
-    .plan h3 { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-    .plan-price { font-size: 2.1rem; font-weight: 800; color: #fff; margin-bottom: 4px; }
-    .plan-price span { font-size: 14px; font-weight: 400; color: var(--muted); }
-    .plan-desc { font-size: 13px; color: var(--muted); margin-bottom: 22px; line-height: 1.5; }
+    .plan h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .plan-price { font-family: "Instrument Serif", serif; font-size: 2.2rem; margin-bottom: 4px; }
+    .plan-price span { font-family: "Inter", sans-serif; font-size: 14px; font-weight: 400; color: var(--muted); }
+    .plan-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
     .plan ul { list-style: none; }
     .plan ul li {
       font-size: 13px; color: var(--muted);
-      padding: 5px 0; display: flex; align-items: flex-start; gap: 9px;
+      padding: 5px 0; display: flex; gap: 8px; align-items: flex-start;
     }
-    .plan ul li::before { content: "✓"; color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .plan ul li::before { content: "✓"; color: var(--green); font-weight: 600; flex-shrink: 0; }
 
     /* ── WAITLIST ── */
-    .waitlist-wrap { max-width: 560px; margin: 0 auto; }
-    .waitlist-box {
-      border: 1px solid var(--border2); border-radius: 14px;
-      padding: 56px 40px; text-align: center;
-      background: var(--bg2);
+    .waitlist-section {
+      max-width: 560px; margin: 0 auto 100px; padding: 0 24px;
+      text-align: center;
     }
-    .waitlist-box h2 { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 12px; letter-spacing: -.02em; }
-    .waitlist-box p { font-size: 15px; color: var(--muted); margin-bottom: 30px; line-height: 1.6; }
-    .waitlist-form { display: flex; gap: 8px; max-width: 400px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+    .waitlist-section h2 {
+      font-family: "Instrument Serif", serif;
+      font-size: clamp(2rem, 5vw, 3rem); font-weight: 400;
+      letter-spacing: -.02em; margin-bottom: 12px;
+    }
+    .waitlist-section p { font-size: 15px; color: var(--muted); margin-bottom: 28px; }
+    .waitlist-form { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
     .waitlist-input {
-      flex: 1; min-width: 210px;
-      background: var(--bg3); border: 1px solid var(--border2);
-      border-radius: 7px; padding: 11px 16px;
-      color: var(--text); font-size: 14px; outline: none;
+      flex: 1; min-width: 220px; max-width: 300px;
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 11px 16px; font-size: 14px; font-family: inherit;
+      color: var(--text); background: #fff; outline: none;
       transition: border-color .15s;
     }
-    .waitlist-input:focus { border-color: var(--accent); }
-    .waitlist-input::placeholder { color: var(--muted); }
-    .waitlist-success { display: none; margin-top: 16px; font-size: 14px; color: var(--green); }
-    .waitlist-success.visible { display: block; }
-    .waitlist-note { font-size: 12px; color: var(--muted); margin-top: 14px; }
+    .waitlist-input:focus { border-color: #aaa; }
+    .waitlist-input::placeholder { color: var(--muted2); }
+    .waitlist-ok { display: none; margin-top: 14px; font-size: 14px; color: var(--green); }
+    .waitlist-ok.visible { display: block; }
+    .waitlist-note { font-size: 12px; color: var(--muted2); margin-top: 12px; }
 
     /* ── FOOTER ── */
     footer {
-      text-align: center; padding: 48px 24px;
-      color: var(--muted); font-size: 13px;
-      border-top: 1px solid var(--border); margin-top: 80px;
+      border-top: 1px solid var(--border);
+      padding: 32px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+      font-size: 13px; color: var(--muted);
     }
-    footer a { color: var(--text); text-decoration: none; }
-    footer a:hover { color: var(--accent); }
-    .footer-logo { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 10px; }
-    .footer-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-logo {
+      font-family: "Instrument Serif", serif;
+      font-size: 17px; color: var(--text);
+    }
 
     /* ── DIVIDER ── */
-    .divider { border: none; border-top: 1px solid var(--border); }
+    hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      .hero { padding: 56px 20px 52px; }
+      .ss-body { grid-template-columns: 1fr; }
+      .ss-sidebar { display: none; }
+      footer { flex-direction: column; text-align: center; }
+    }
   </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">
-    <div class="nav-logo-mark">W</div>
-    WikiOS
-  </div>
+  <a class="nav-logo" href="#">WikiOS</a>
   <div class="nav-links">
-    <a href="#demo">Demo</a>
-    <a href="#features">Features</a>
-    <a href="#pricing">Pricing</a>
-    <a href="https://github.com/shashank-100/wikios" target="_blank">GitHub</a>
-    <a href="#waitlist" class="btn btn-primary btn-sm">Get early access</a>
+    <a class="nav-link" href="#demo">Demo</a>
+    <a class="nav-link" href="#features">Features</a>
+    <a class="nav-link" href="#pricing">Pricing</a>
+    <a class="nav-link" href="https://github.com/shashank-100/wikios" target="_blank">GitHub</a>
+    <a class="nav-cta" href="#waitlist">Get early access</a>
   </div>
 </nav>
 
-<!-- SOCIAL PROOF BAR -->
-<div class="proof-bar">
-  <div class="proof-item"><div class="proof-dot"></div> Built on Claude · Anthropic</div>
-  <div class="proof-item"><div class="proof-dot"></div> Open source engine</div>
-  <div class="proof-item"><div class="proof-dot"></div> Based on Karpathy's LLM Wiki pattern</div>
-  <div class="proof-item"><div class="proof-dot"></div> Self-hostable · your docs stay yours</div>
-</div>
-
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-badge">Now in beta</div>
-  <h1>Your knowledge base that<br><em>maintains itself</em></h1>
-  <p>Drop in PDFs, reports, and research. WikiOS builds a living, interlinked knowledge graph that grows smarter with every document you add.</p>
-  <div class="hero-cta">
-    <a href="#demo" class="btn btn-primary">Try the demo →</a>
-    <a href="https://github.com/shashank-100/wikios" target="_blank" class="btn btn-ghost">⭐ Star on GitHub</a>
+  <div class="hero-social-icons">
+    <span>📄 PDFs</span>
+    <span>🔗 URLs</span>
+    <span>📁 Drive</span>
+    <span>📝 Notion</span>
+    <span>🗂 Confluence</span>
+  </div>
+  <h1>The knowledge base<br>that <em>maintains itself</em></h1>
+  <p>Drop in documents. WikiOS builds a living, interlinked knowledge graph that grows smarter over time — zero manual work.</p>
+  <div class="hero-cta-wrap">
+    <a class="btn-hero" href="#demo">Try the demo →</a>
+    <div class="social-proof">
+      <div class="avatars">
+        <div class="av av1">J</div>
+        <div class="av av2">A</div>
+        <div class="av av3">S</div>
+        <div class="av av4">M</div>
+        <div class="av av5">R</div>
+      </div>
+      <span>Used by <strong>240+</strong> early users</span>
+    </div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<div class="section">
-  <div class="section-label">How it works</div>
-  <h2>From documents to living knowledge</h2>
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">Step 01</div>
-      <h3>Drop in documents</h3>
-      <p>Upload PDFs, paste URLs, or connect Google Drive, Confluence, or Notion. Any format works.</p>
+<!-- PRODUCT DEMO -->
+<div class="screenshot-wrap" id="demo">
+  <div class="screenshot-inner">
+    <div class="ss-titlebar">
+      <div class="ss-dot ss-dot-r"></div>
+      <div class="ss-dot ss-dot-y"></div>
+      <div class="ss-dot ss-dot-g"></div>
+      <div class="ss-url">wikios.app / workspace / legal-research</div>
     </div>
-    <div class="step">
-      <div class="step-num">Step 02</div>
-      <h3>AI builds the graph</h3>
-      <p>WikiOS extracts concepts, entities, and relationships — then links everything to what already exists.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">Step 03</div>
-      <h3>Knowledge compounds</h3>
-      <p>Every new document enriches the whole graph. The more you add, the smarter it gets.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">Step 04</div>
-      <h3>Stays current</h3>
-      <p>New documents are processed automatically. The wiki updates itself — no manual maintenance ever.</p>
-    </div>
-  </div>
+    <div class="ss-body">
+      <div class="ss-sidebar">
+        <div class="ss-sidebar-section">Sources</div>
+        <div class="ss-item active" onclick="showPage('source',this)"><div class="ss-item-dot c-blue"></div>sec-filing-q4</div>
+        <div class="ss-item" onclick="showPage('source2',this)"><div class="ss-item-dot c-blue"></div>merger-agreement</div>
+        <div class="ss-item" onclick="showPage('source3',this)"><div class="ss-item-dot c-blue"></div>compliance-memo</div>
+        <div class="ss-sidebar-section">Concepts</div>
+        <div class="ss-item" onclick="showPage('concept',this)"><div class="ss-item-dot c-green"></div>material-disclosure</div>
+        <div class="ss-item" onclick="showPage('concept2',this)"><div class="ss-item-dot c-green"></div>indemnification</div>
+        <div class="ss-sidebar-section">Entities</div>
+        <div class="ss-item" onclick="showPage('entity',this)"><div class="ss-item-dot c-orange"></div>Acme Corp</div>
+        <div class="ss-item" onclick="showPage('entity2',this)"><div class="ss-item-dot c-orange"></div>SEC</div>
+      </div>
 
-  <div class="stats">
-    <div class="stat"><div class="stat-num">120+</div><div class="stat-label">Pages from 27 papers</div></div>
-    <div class="stat"><div class="stat-num">1,400+</div><div class="stat-label">Cross-references auto-created</div></div>
-    <div class="stat"><div class="stat-num">0 hrs</div><div class="stat-label">Manual maintenance required</div></div>
-    <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Knowledge compounds over time</div></div>
+      <div class="ss-main">
+        <div class="ss-tabs">
+          <button class="ss-tab active" onclick="switchTab('wiki',this)">Wiki</button>
+          <button class="ss-tab" onclick="switchTab('ingest',this)">Add Documents</button>
+          <button class="ss-tab" onclick="switchTab('query',this)">Ask</button>
+          <button class="ss-tab" onclick="switchTab('log',this)">Log</button>
+        </div>
+
+        <!-- Wiki -->
+        <div class="ss-tab-panel active" id="tab-wiki">
+          <div id="page-content">
+            <div class="ss-page-title">sec-filing-q4</div>
+            <div class="ss-tags">
+              <span class="ss-tag">type: source</span>
+              <span class="ss-tag">ingested: 2026-04-28</span>
+              <span class="ss-tag">12 links</span>
+            </div>
+            <div class="ss-body-text">
+              <p>This Q4 SEC filing from <a class="wl">[[Acme Corp]]</a> discloses material changes in revenue recognition under ASC 606. The filing references the pending <a class="wl">[[merger-agreement]]</a> and its potential impact on forward-looking statements.</p>
+              <p>Key disclosures relate to <a class="wl">[[material-disclosure]]</a> obligations under Regulation S-K Item 303. MD&amp;A notes three new risk factors: counterparty exposure, <a class="wl">[[indemnification]]</a> clauses in the merger, and regulatory review timelines from the <a class="wl">[[SEC]]</a>.</p>
+              <p>Cross-reference: revenue recognition method here contradicts <a class="wl">[[compliance-memo]]</a> dated 2026-02-14 — gap flagged for investigation.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ingest -->
+        <div class="ss-tab-panel" id="tab-ingest">
+          <p style="font-size:14px;color:var(--muted);margin-bottom:16px">Drop documents to add them. WikiOS extracts concepts, entities, and links everything automatically.</p>
+          <div class="upload-zone" id="dropzone"
+            ondragover="event.preventDefault();this.classList.add('drag-over')"
+            ondragleave="this.classList.remove('drag-over')"
+            ondrop="handleDrop(event)"
+            onclick="document.getElementById('fileInput').click()">
+            <div style="font-size:26px;margin-bottom:8px">📄</div>
+            <p><strong>Click to upload</strong> or drag and drop</p>
+            <p style="font-size:12px;margin-top:4px">PDF, TXT, MD — up to 50MB</p>
+          </div>
+          <input type="file" id="fileInput" multiple style="display:none" onchange="handleFileSelect(this.files)" />
+          <div class="processing" id="processing"><div class="spinner"></div><span id="proc-text">Processing...</span></div>
+          <div class="ingest-ok" id="ingest-ok"></div>
+        </div>
+
+        <!-- Query -->
+        <div class="ss-tab-panel" id="tab-query">
+          <p style="font-size:14px;color:var(--muted);margin-bottom:16px">Ask anything. WikiOS synthesizes a cited answer from across all documents.</p>
+          <div class="query-row">
+            <input class="query-input" id="queryInput" type="text" placeholder="e.g. What indemnification clauses conflict across the merger docs?" />
+            <button class="btn-sm" onclick="runQuery()">Ask</button>
+          </div>
+          <div class="query-answer" id="queryAnswer"></div>
+          <div class="query-chips">
+            <button class="chip" onclick="setQuery('What are all material disclosure obligations?')">Material disclosures</button>
+            <button class="chip" onclick="setQuery('Where does Acme Corp appear?')">Acme Corp</button>
+            <button class="chip" onclick="setQuery('What topics are covered by multiple documents?')">Topic overlap</button>
+          </div>
+        </div>
+
+        <!-- Log -->
+        <div class="ss-tab-panel" id="tab-log">
+          <p style="font-size:14px;color:var(--muted);margin-bottom:14px">Append-only audit trail.</p>
+          <div class="log-box">
+            <div class="log-row"><span class="log-ts">2026-04-28T14:32Z</span> Ingested sec-filing-q4.pdf → 1 source, 2 concepts, 1 entity, 9 links</div>
+            <div class="log-row"><span class="log-ts">2026-04-28T14:31Z</span> Ingested compliance-memo.pdf → 1 source, 1 concept, 3 links</div>
+            <div class="log-row"><span class="log-ts">2026-04-27T09:12Z</span> Enrichment pass — deepened 3 pages, added 14 links</div>
+            <div class="log-row"><span class="log-ts">2026-04-26T18:05Z</span> Ingested merger-agreement.pdf → 1 source, 3 concepts, 2 entities, 12 links</div>
+            <div class="log-row"><span class="log-ts">2026-04-26T18:04Z</span> Workspace initialized</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- DEMO -->
-<div class="section" id="demo">
-  <div class="section-label">Live demo</div>
-  <h2>See WikiOS in action</h2>
-  <div class="demo-wrap">
-    <div class="demo-titlebar">
-      <div class="dot dot-r"></div>
-      <div class="dot dot-y"></div>
-      <div class="dot dot-g"></div>
-      <div class="demo-titlebar-text">WikiOS — workspace: legal-research</div>
+<!-- STATS -->
+<div style="padding:0 24px">
+  <div class="stats-row">
+    <div class="stat-cell"><div class="stat-num">120+</div><div class="stat-label">Pages from 27 papers</div></div>
+    <div class="stat-cell"><div class="stat-num">1,400+</div><div class="stat-label">Cross-references auto-created</div></div>
+    <div class="stat-cell"><div class="stat-num">0 hrs</div><div class="stat-label">Manual maintenance</div></div>
+    <div class="stat-cell"><div class="stat-num">∞</div><div class="stat-label">Knowledge compounds</div></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how-section" style="padding-top:80px">
+  <div class="section-eyebrow">How it works</div>
+  <div class="section-title">From documents to living knowledge</div>
+  <div class="steps-list">
+    <div class="step-item">
+      <div class="step-num">01</div>
+      <h3>Drop in documents</h3>
+      <p>Upload PDFs, paste URLs, or connect Google Drive, Confluence, or Notion. Any format works.</p>
     </div>
-    <div class="demo-body">
-      <div class="demo-sidebar">
-        <h4>Sources</h4>
-        <div class="sidebar-item active" onclick="showPage('source', this)">
-          <div class="dot-type type-source"></div> sec-filing-q4
-        </div>
-        <div class="sidebar-item" onclick="showPage('source2', this)">
-          <div class="dot-type type-source"></div> merger-agreement
-        </div>
-        <div class="sidebar-item" onclick="showPage('source3', this)">
-          <div class="dot-type type-source"></div> compliance-memo
-        </div>
-        <h4>Concepts</h4>
-        <div class="sidebar-item" onclick="showPage('concept', this)">
-          <div class="dot-type type-concept"></div> material-disclosure
-        </div>
-        <div class="sidebar-item" onclick="showPage('concept2', this)">
-          <div class="dot-type type-concept"></div> indemnification
-        </div>
-        <h4>Entities</h4>
-        <div class="sidebar-item" onclick="showPage('entity', this)">
-          <div class="dot-type type-entity"></div> Acme Corp
-        </div>
-        <div class="sidebar-item" onclick="showPage('entity2', this)">
-          <div class="dot-type type-entity"></div> SEC
-        </div>
-      </div>
-
-      <div class="demo-main">
-        <div class="tabs">
-          <button class="tab active" onclick="switchTab('wiki', this)">Wiki</button>
-          <button class="tab" onclick="switchTab('ingest', this)">Add Documents</button>
-          <button class="tab" onclick="switchTab('query', this)">Ask a Question</button>
-          <button class="tab" onclick="switchTab('log', this)">Activity Log</button>
-        </div>
-
-        <!-- Wiki tab -->
-        <div class="tab-panel active" id="tab-wiki">
-          <div id="page-content">
-            <div class="page-title">sec-filing-q4</div>
-            <div class="page-meta">
-              <span class="tag">type: source</span>
-              <span class="tag">ingested: 2026-04-28</span>
-              <span class="tag">12 links</span>
-            </div>
-            <div class="page-body">
-              <p>This Q4 SEC filing from <a class="wikilink">[[Acme Corp]]</a> discloses material changes in revenue recognition under ASC 606. The filing references the pending <a class="wikilink">[[merger-agreement]]</a> and its potential impact on forward-looking statements.</p>
-              <p>Key disclosures relate to <a class="wikilink">[[material-disclosure]]</a> obligations under Regulation S-K Item 303. Management's Discussion &amp; Analysis notes three risk factors not present in Q3: counterparty exposure, <a class="wikilink">[[indemnification]]</a> clauses in the merger, and regulatory review timelines from the <a class="wikilink">[[SEC]]</a>.</p>
-              <p>Cross-reference: the revenue recognition method here directly contradicts the approach in <a class="wikilink">[[compliance-memo]]</a> dated 2026-02-14 — a gap flagged for investigation.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Ingest tab -->
-        <div class="tab-panel" id="tab-ingest">
-          <p class="upload-desc">Drop documents to add them to the knowledge base. WikiOS extracts concepts, entities, and links them to existing pages automatically.</p>
-          <div class="upload-zone" id="dropzone"
-               ondragover="event.preventDefault(); this.classList.add('drag-over')"
-               ondragleave="this.classList.remove('drag-over')"
-               ondrop="handleDrop(event)"
-               onclick="document.getElementById('fileInput').click()">
-            <div class="upload-icon">📄</div>
-            <p><strong>Click to upload</strong> or drag and drop</p>
-            <p style="margin-top:5px; font-size:12px">PDF, TXT, MD — up to 50MB each</p>
-          </div>
-          <input type="file" id="fileInput" multiple style="display:none" onchange="handleFileSelect(this.files)" />
-          <div class="processing" id="processing">
-            <div class="spinner"></div>
-            <span id="processing-text">Processing documents...</span>
-          </div>
-          <div class="ingest-result" id="ingest-result"></div>
-        </div>
-
-        <!-- Query tab -->
-        <div class="tab-panel" id="tab-query">
-          <p class="query-desc">Ask any question. WikiOS searches across all documents and synthesizes a cited answer.</p>
-          <div class="query-box">
-            <input class="query-input" id="queryInput" type="text" placeholder="e.g. What indemnification clauses conflict across the merger docs?" />
-            <button class="btn btn-primary btn-sm" onclick="runQuery()">Ask</button>
-          </div>
-          <div class="query-result" id="queryResult"></div>
-          <div class="query-chips">
-            <button class="btn btn-ghost btn-sm" onclick="setQuery('What are all the material disclosure obligations?')">Material disclosures</button>
-            <button class="btn btn-ghost btn-sm" onclick="setQuery('Where does Acme Corp appear and in what context?')">Acme Corp</button>
-            <button class="btn btn-ghost btn-sm" onclick="setQuery('What topics are covered by multiple documents?')">Topic overlap</button>
-          </div>
-        </div>
-
-        <!-- Log tab -->
-        <div class="tab-panel" id="tab-log">
-          <p style="font-size:14px; color:var(--muted); margin-bottom:16px">Append-only audit trail of all knowledge base changes.</p>
-          <div class="log-box">
-            <div class="log-entry"><span class="log-ts">2026-04-28T14:32:11Z</span> Ingested sec-filing-q4.pdf → 1 source, 2 concepts, 1 entity, 9 links</div>
-            <div class="log-entry"><span class="log-ts">2026-04-28T14:31:05Z</span> Ingested compliance-memo.pdf → 1 source, 1 concept, 3 links</div>
-            <div class="log-entry"><span class="log-ts">2026-04-27T09:12:44Z</span> Enrichment pass — deepened 3 shallow pages, added 14 cross-links</div>
-            <div class="log-entry"><span class="log-ts">2026-04-26T18:05:30Z</span> Ingested merger-agreement.pdf → 1 source, 3 concepts, 2 entities, 12 links</div>
-            <div class="log-entry"><span class="log-ts">2026-04-26T18:04:01Z</span> Workspace initialized</div>
-          </div>
-        </div>
-      </div>
+    <div class="step-item">
+      <div class="step-num">02</div>
+      <h3>AI builds the graph</h3>
+      <p>WikiOS extracts concepts, entities, and relationships — then links everything to what already exists.</p>
+    </div>
+    <div class="step-item">
+      <div class="step-num">03</div>
+      <h3>Knowledge compounds</h3>
+      <p>Every new document enriches the whole graph. The more you add, the smarter it gets.</p>
+    </div>
+    <div class="step-item">
+      <div class="step-num">04</div>
+      <h3>Stays current</h3>
+      <p>New documents are processed automatically. The wiki updates itself — no manual maintenance ever.</p>
     </div>
   </div>
 </div>
 
 <!-- FEATURES -->
-<div class="section" id="features">
-  <div class="section-label">Features</div>
-  <h2>Everything a living knowledge base needs</h2>
-  <div class="features">
-    <div class="feature">
+<div class="features-section" id="features">
+  <div class="section-eyebrow">Features</div>
+  <div class="section-title">Everything a living knowledge<br>base needs</div>
+  <div class="features-grid">
+    <div class="feature-card">
       <div class="feature-icon">🔗</div>
       <h3>Auto cross-linking</h3>
-      <p>Every concept and entity is linked across all documents automatically. 1,400+ links created without any manual tagging.</p>
+      <p>Every concept and entity is linked across all documents automatically. 1,400+ links with zero manual tagging.</p>
     </div>
-    <div class="feature">
+    <div class="feature-card">
       <div class="feature-icon">⚡</div>
       <h3>Parallel ingest</h3>
-      <p>Upload 50 documents at once. WikiOS processes them in parallel with zero race conditions on shared state.</p>
+      <p>Upload 50 documents at once. Parallel processing with zero race conditions on shared state.</p>
     </div>
-    <div class="feature">
+    <div class="feature-card">
       <div class="feature-icon">🔍</div>
       <h3>Synthesized Q&A</h3>
-      <p>Ask questions in plain language. Get cited answers that draw from across the entire knowledge base.</p>
+      <p>Ask questions in plain language. Get cited answers drawn from across the entire knowledge base.</p>
     </div>
-    <div class="feature">
+    <div class="feature-card">
       <div class="feature-icon">📊</div>
       <h3>Gap analysis</h3>
-      <p>WikiOS tells you what's missing — concepts mentioned but not explained, topics with thin coverage, documents to add next.</p>
+      <p>WikiOS tells you what's missing — thin coverage, unresolved conflicts, documents to add next.</p>
     </div>
-    <div class="feature">
+    <div class="feature-card">
       <div class="feature-icon">🏢</div>
       <h3>Vertical schemas</h3>
-      <p>Pre-built schemas for legal, pharma, and finance. Or define your own page types, fields, and depth standards.</p>
+      <p>Pre-built schemas for legal, pharma, and finance. Or define your own page types and depth standards.</p>
     </div>
-    <div class="feature">
+    <div class="feature-card">
       <div class="feature-icon">🔒</div>
       <h3>Self-hosted</h3>
-      <p>Bring your own Anthropic API key and run WikiOS entirely on your infrastructure. Your documents never leave.</p>
+      <p>Bring your own Anthropic key and run entirely on your infrastructure. Your documents never leave.</p>
     </div>
   </div>
 </div>
 
 <!-- PRICING -->
-<div class="section" id="pricing">
-  <div class="section-label">Pricing</div>
-  <h2>Simple, workspace-based pricing</h2>
-  <div class="pricing">
+<div class="pricing-section" id="pricing">
+  <div class="section-eyebrow">Pricing</div>
+  <div class="section-title">Simple pricing</div>
+  <div class="pricing-grid">
     <div class="plan">
       <h3>Starter</h3>
       <div class="plan-price">Free</div>
@@ -668,10 +649,10 @@
       </ul>
     </div>
     <div class="plan featured">
-      <span class="plan-featured-badge">Most popular</span>
+      <span class="plan-badge">Most popular</span>
       <h3>Team</h3>
       <div class="plan-price">$299 <span>/ mo</span></div>
-      <div class="plan-desc">For growing teams that need more</div>
+      <div class="plan-desc">For growing teams</div>
       <ul>
         <li>5 workspaces</li>
         <li>Unlimited documents</li>
@@ -691,192 +672,130 @@
         <li>Bring your own API key</li>
         <li>SSO + audit logs</li>
         <li>SLA + dedicated support</li>
-        <li>Custom integrations</li>
       </ul>
     </div>
   </div>
 </div>
 
 <!-- WAITLIST -->
-<div class="section" id="waitlist">
-  <div class="waitlist-wrap">
-    <div class="waitlist-box">
-      <h2>Get early access</h2>
-      <p>We're onboarding design partners in legal, pharma, and finance. Free during beta.</p>
-      <form class="waitlist-form" onsubmit="joinWaitlist(event)">
-        <input class="waitlist-input" type="email" placeholder="your@email.com" required id="waitlistEmail" />
-        <button class="btn btn-primary" type="submit">Join waitlist</button>
-      </form>
-      <div class="waitlist-success" id="waitlistSuccess">You're on the list. We'll be in touch within 48 hours.</div>
-      <div class="waitlist-note">No spam. Just early access when your slot opens.</div>
-    </div>
-  </div>
+<div class="waitlist-section" id="waitlist">
+  <h2>Get early access</h2>
+  <p>We're onboarding design partners in legal, pharma, and finance. Free during beta.</p>
+  <form class="waitlist-form" onsubmit="joinWaitlist(event)">
+    <input class="waitlist-input" type="email" id="waitlistEmail" placeholder="your@email.com" required />
+    <button class="btn-hero" type="submit" style="padding:11px 28px;font-size:14px">Join waitlist</button>
+  </form>
+  <div class="waitlist-ok" id="waitlist-ok">You're on the list. We'll be in touch within 48 hours.</div>
+  <div class="waitlist-note">No spam. Early access when your slot opens.</div>
 </div>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">WikiOS</div>
+  <span class="footer-logo">WikiOS</span>
   <div class="footer-links">
     <a href="#demo">Demo</a>
     <a href="https://github.com/shashank-100/wikios" target="_blank">GitHub</a>
     <a href="mailto:shashank.telkhade@gmail.com">Contact</a>
   </div>
-  <p>Built on the <a href="https://github.com/CompleteTech-LLC-AI-Research/beyond-the-token-bottleneck" target="_blank">LLM Wiki pattern</a> · Powered by Claude</p>
+  <span>Built on Claude · Powered by Anthropic</span>
 </footer>
 
 <script>
-  // ── Tab switching ──
+  // tabs
   function switchTab(name, el) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.ss-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.ss-tab-panel').forEach(p => p.classList.remove('active'));
     el.classList.add('active');
     document.getElementById('tab-' + name).classList.add('active');
   }
 
-  // ── Wiki pages ──
+  // wiki pages
   const pages = {
-    source: {
-      title: 'sec-filing-q4',
-      tags: ['type: source', 'ingested: 2026-04-28', '12 links'],
-      body: `<p>This Q4 SEC filing from <a class="wikilink">[[Acme Corp]]</a> discloses material changes in revenue recognition under ASC 606. The filing references the pending <a class="wikilink">[[merger-agreement]]</a> and its potential impact on forward-looking statements.</p>
-      <p>Key disclosures relate to <a class="wikilink">[[material-disclosure]]</a> obligations under Regulation S-K Item 303. MD&A notes three risk factors not in Q3: counterparty exposure, <a class="wikilink">[[indemnification]]</a> clauses, and regulatory review timelines from the <a class="wikilink">[[SEC]]</a>.</p>
-      <p>Cross-reference: revenue recognition method here contradicts <a class="wikilink">[[compliance-memo]]</a> dated 2026-02-14 — gap flagged for investigation.</p>`
-    },
-    source2: {
-      title: 'merger-agreement',
-      tags: ['type: source', 'ingested: 2026-04-26', '18 links'],
-      body: `<p>Definitive merger agreement between <a class="wikilink">[[Acme Corp]]</a> and TargetCo at $42.50/share. Contains broad <a class="wikilink">[[indemnification]]</a> provisions covering all pre-closing liabilities without a materiality qualifier.</p>
-      <p>Section 8.3 introduces <a class="wikilink">[[material-disclosure]]</a> covenants requiring both parties to update disclosure schedules if any material fact changes before closing. <a class="wikilink">[[SEC]]</a> review period: 30–60 days from filing.</p>`
-    },
-    source3: {
-      title: 'compliance-memo',
-      tags: ['type: source', 'ingested: 2026-04-28', '7 links'],
-      body: `<p>Internal memo addressing revenue recognition policy ahead of the <a class="wikilink">[[merger-agreement]]</a> close. Recommends ASC 606 point-in-time recognition — contradicts approach in <a class="wikilink">[[sec-filing-q4]]</a>.</p>
-      <p>Flags the discrepancy as a potential <a class="wikilink">[[material-disclosure]]</a> issue for <a class="wikilink">[[SEC]]</a> review. Recommend outside counsel review before close.</p>`
-    },
-    concept: {
-      title: 'material-disclosure',
-      tags: ['type: concept', '3 sources', '8 backlinks'],
-      body: `<p>The obligation to disclose information a reasonable investor would find important. Defined under SEC Regulation S-K and shaped by <em>Basic Inc. v. Levinson</em>.</p>
-      <p>Appears in: <a class="wikilink">[[sec-filing-q4]]</a>, <a class="wikilink">[[merger-agreement]]</a>, <a class="wikilink">[[compliance-memo]]</a>. Common thread: all three invoke this in the context of the pending acquisition.</p>
-      <p><strong>Open question:</strong> The revenue recognition discrepancy between <a class="wikilink">[[sec-filing-q4]]</a> and <a class="wikilink">[[compliance-memo]]</a> may itself trigger a disclosure obligation — unresolved.</p>`
-    },
-    concept2: {
-      title: 'indemnification',
-      tags: ['type: concept', '2 sources', '5 backlinks'],
-      body: `<p>M&A clauses allocating risk between acquirer and target for pre-closing liabilities. Detected in <a class="wikilink">[[merger-agreement]]</a> (Section 8.3) and <a class="wikilink">[[sec-filing-q4]]</a> (Risk Factors).</p>
-      <p>The merger agreement's scope is unusually broad — no materiality qualifier — which is worth flagging in due diligence.</p>`
-    },
-    entity: {
-      title: 'Acme Corp',
-      tags: ['type: entity', 'org', '3 appearances'],
-      body: `<p>Acquirer in the pending merger. Appears across all three source documents.</p>
-      <p><strong>Appearances:</strong><br>
-      → <a class="wikilink">[[sec-filing-q4]]</a>: Filing entity, revenue recognition disclosures<br>
-      → <a class="wikilink">[[merger-agreement]]</a>: Acquiring party, indemnification provisions<br>
-      → <a class="wikilink">[[compliance-memo]]</a>: Subject of internal policy recommendation</p>`
-    },
-    entity2: {
-      title: 'SEC',
-      tags: ['type: entity', 'org', '3 appearances'],
-      body: `<p>U.S. Securities and Exchange Commission. Referenced as the governing body for disclosure obligations and merger review timelines across all source documents.</p>
-      <p>WikiOS auto-linked all 7 mentions to this entity page.</p>`
-    }
+    source: { title: 'sec-filing-q4', tags: ['type: source','ingested: 2026-04-28','12 links'],
+      body: `<p>This Q4 SEC filing from <a class="wl">[[Acme Corp]]</a> discloses material changes in revenue recognition under ASC 606. The filing references the pending <a class="wl">[[merger-agreement]]</a> and its impact on forward-looking statements.</p><p>Key disclosures relate to <a class="wl">[[material-disclosure]]</a> obligations under Regulation S-K Item 303. MD&A notes three new risk factors: counterparty exposure, <a class="wl">[[indemnification]]</a> clauses, and review timelines from the <a class="wl">[[SEC]]</a>.</p><p>Cross-reference: revenue recognition method contradicts <a class="wl">[[compliance-memo]]</a> dated 2026-02-14 — gap flagged.</p>` },
+    source2: { title: 'merger-agreement', tags: ['type: source','ingested: 2026-04-26','18 links'],
+      body: `<p>Definitive merger agreement between <a class="wl">[[Acme Corp]]</a> and TargetCo at $42.50/share. Contains broad <a class="wl">[[indemnification]]</a> provisions — no materiality qualifier, which is unusual.</p><p>Section 8.3 introduces <a class="wl">[[material-disclosure]]</a> covenants. <a class="wl">[[SEC]]</a> review period: 30–60 days from filing.</p>` },
+    source3: { title: 'compliance-memo', tags: ['type: source','ingested: 2026-04-28','7 links'],
+      body: `<p>Internal memo recommending ASC 606 point-in-time recognition ahead of the <a class="wl">[[merger-agreement]]</a> close. Contradicts approach in <a class="wl">[[sec-filing-q4]]</a>.</p><p>Flags discrepancy as a potential <a class="wl">[[material-disclosure]]</a> issue for <a class="wl">[[SEC]]</a> review.</p>` },
+    concept: { title: 'material-disclosure', tags: ['type: concept','3 sources','8 backlinks'],
+      body: `<p>The obligation to disclose information a reasonable investor would find important. Defined under SEC Regulation S-K and shaped by <em>Basic Inc. v. Levinson</em>.</p><p>Appears in: <a class="wl">[[sec-filing-q4]]</a>, <a class="wl">[[merger-agreement]]</a>, <a class="wl">[[compliance-memo]]</a>.</p><p><strong>Open question:</strong> Revenue recognition discrepancy may itself trigger a disclosure obligation — unresolved.</p>` },
+    concept2: { title: 'indemnification', tags: ['type: concept','2 sources','5 backlinks'],
+      body: `<p>M&A clauses allocating risk for pre-closing liabilities. Found in <a class="wl">[[merger-agreement]]</a> (Section 8.3) and <a class="wl">[[sec-filing-q4]]</a>. Scope is unusually broad — no materiality qualifier.</p>` },
+    entity: { title: 'Acme Corp', tags: ['type: entity','org','3 appearances'],
+      body: `<p>Acquirer in the pending merger. Appears across all three source documents.</p><p>→ <a class="wl">[[sec-filing-q4]]</a>: Filing entity<br>→ <a class="wl">[[merger-agreement]]</a>: Acquiring party<br>→ <a class="wl">[[compliance-memo]]</a>: Policy subject</p>` },
+    entity2: { title: 'SEC', tags: ['type: entity','org','3 appearances'],
+      body: `<p>U.S. Securities and Exchange Commission. Referenced across all source documents as the governing body for disclosure obligations and merger review. WikiOS auto-linked all 7 mentions.</p>` }
   };
 
   function showPage(key, el) {
-    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.ss-item').forEach(i => i.classList.remove('active'));
     el.classList.add('active');
     const p = pages[key];
-    document.getElementById('page-content').innerHTML = `
-      <div class="page-title">${p.title}</div>
-      <div class="page-meta">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-      <div class="page-body">${p.body}</div>`;
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(tp => tp.classList.remove('active'));
-    document.querySelectorAll('.tab')[0].classList.add('active');
+    document.getElementById('page-content').innerHTML =
+      `<div class="ss-page-title">${p.title}</div>
+       <div class="ss-tags">${p.tags.map(t=>`<span class="ss-tag">${t}</span>`).join('')}</div>
+       <div class="ss-body-text">${p.body}</div>`;
+    document.querySelectorAll('.ss-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.ss-tab-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.ss-tab')[0].classList.add('active');
     document.getElementById('tab-wiki').classList.add('active');
   }
 
-  // ── Ingest simulation ──
-  function handleDrop(e) {
-    e.preventDefault();
-    e.currentTarget.classList.remove('drag-over');
-    simulateIngest(e.dataTransfer.files);
-  }
+  // ingest sim
+  function handleDrop(e) { e.preventDefault(); e.currentTarget.classList.remove('drag-over'); simulateIngest(e.dataTransfer.files); }
   function handleFileSelect(files) { simulateIngest(files); }
   function simulateIngest(files) {
     if (!files.length) return;
     const proc = document.getElementById('processing');
-    const result = document.getElementById('ingest-result');
-    result.classList.remove('visible');
+    const ok = document.getElementById('ingest-ok');
+    ok.classList.remove('visible');
     proc.classList.add('visible');
-    document.getElementById('processing-text').textContent =
-      `Processing ${files.length} document${files.length > 1 ? 's' : ''}: ${Array.from(files).map(f => f.name).join(', ')}`;
+    document.getElementById('proc-text').textContent = `Processing ${files.length} document${files.length>1?'s':''}...`;
     setTimeout(() => {
       proc.classList.remove('visible');
-      result.classList.add('visible');
-      result.textContent = `✓ Ingested ${files.length} document${files.length > 1 ? 's' : ''}. Created ${files.length * 3} wiki pages, ${files.length * 7} cross-links. Knowledge base updated.`;
-    }, 2600);
+      ok.classList.add('visible');
+      ok.textContent = `✓ Ingested ${files.length} document${files.length>1?'s':''}. Created ${files.length*3} wiki pages, ${files.length*7} cross-links.`;
+    }, 2400);
   }
 
-  // ── Query simulation ──
-  const mockAnswers = {
-    default: `Based on the knowledge base, <a class="wikilink">[[material-disclosure]]</a> obligations appear in all three source documents. Most significant: a conflict exists — <a class="wikilink">[[sec-filing-q4]]</a> uses point-in-time revenue recognition while <a class="wikilink">[[compliance-memo]]</a> recommends a different approach. This discrepancy may itself trigger a disclosure obligation under Regulation S-K Item 303. Recommend flagging for outside counsel before the <a class="wikilink">[[merger-agreement]]</a> close.`,
-    acme: `<a class="wikilink">[[Acme Corp]]</a> appears in 3 source pages: as the filing entity in <a class="wikilink">[[sec-filing-q4]]</a>, as the acquiring party in <a class="wikilink">[[merger-agreement]]</a>, and as the subject of policy recommendations in <a class="wikilink">[[compliance-memo]]</a>. Total: 7 mentions auto-linked across the workspace.`,
-    overlap: `Topics covered by 2+ documents: <a class="wikilink">[[material-disclosure]]</a> (3 docs), <a class="wikilink">[[indemnification]]</a> (2 docs), revenue recognition (2 docs — conflict detected), SEC review timeline (2 docs). The revenue recognition conflict is the highest-priority gap.`
+  // query sim
+  const answers = {
+    default: `Based on the knowledge base, <a class="wl">[[material-disclosure]]</a> obligations appear in all three documents. Most significant: a conflict exists — <a class="wl">[[sec-filing-q4]]</a> uses one revenue recognition method while <a class="wl">[[compliance-memo]]</a> recommends another. This may itself trigger a disclosure obligation before the <a class="wl">[[merger-agreement]]</a> close.`,
+    acme: `<a class="wl">[[Acme Corp]]</a> appears in 3 source pages: filing entity in <a class="wl">[[sec-filing-q4]]</a>, acquiring party in <a class="wl">[[merger-agreement]]</a>, policy subject in <a class="wl">[[compliance-memo]]</a>. 7 mentions auto-linked.`,
+    overlap: `Topics in 2+ documents: <a class="wl">[[material-disclosure]]</a> (3 docs), <a class="wl">[[indemnification]]</a> (2 docs), revenue recognition (2 docs — conflict detected).`
   };
-
   function setQuery(q) {
     document.getElementById('queryInput').value = q;
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab')[2].classList.add('active');
-    document.getElementById('tab-query').classList.add('active');
+    switchTab('query', document.querySelectorAll('.ss-tab')[2]);
   }
-
   function runQuery() {
     const q = document.getElementById('queryInput').value.toLowerCase();
-    const result = document.getElementById('queryResult');
-    result.classList.remove('visible');
-    result.innerHTML = '<div class="spinner" style="margin:0 auto"></div>';
-    result.classList.add('visible');
+    const ans = document.getElementById('queryAnswer');
+    ans.classList.remove('visible');
+    ans.innerHTML = '<div class="spinner" style="margin:0 auto"></div>';
+    ans.classList.add('visible');
     setTimeout(() => {
-      let answer = mockAnswers.default;
-      if (q.includes('acme')) answer = mockAnswers.acme;
-      if (q.includes('overlap') || q.includes('multiple') || q.includes('covered')) answer = mockAnswers.overlap;
-      result.innerHTML = answer;
-    }, 1300);
+      ans.innerHTML = q.includes('acme') ? answers.acme : q.includes('overlap')||q.includes('multiple') ? answers.overlap : answers.default;
+    }, 1200);
   }
+  document.getElementById('queryInput').addEventListener('keydown', e => { if(e.key==='Enter') runQuery(); });
 
-  document.getElementById('queryInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') runQuery();
-  });
-
-  // ── Waitlist ──
+  // waitlist
   async function joinWaitlist(e) {
     e.preventDefault();
-    const email = document.getElementById('waitlistEmail').value;
     const btn = e.target.querySelector('button');
-    btn.textContent = 'Joining...';
-    btn.disabled = true;
-    try {
-      await fetch('/waitlist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-    } catch {}
+    btn.textContent = 'Joining...'; btn.disabled = true;
+    try { await fetch('/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('waitlistEmail').value})}); } catch{}
     document.getElementById('waitlistEmail').value = '';
-    document.getElementById('waitlistSuccess').classList.add('visible');
+    document.getElementById('waitlist-ok').classList.add('visible');
     btn.textContent = 'Joined!';
   }
 
-  // ── Smooth scroll ──
+  // smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }
     });
   });
 </script>
