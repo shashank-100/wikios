@@ -91,12 +91,15 @@ Happy to answer anything about how it works under the hood. What vertical would 
 
 ## Launch checklist
 
-- [ ] GitHub repo public with README and demo GIF
-- [ ] Landing page live (ui/index.html deployed)
-- [ ] .env.example committed (no secrets)
+- [x] GitHub repo public — https://github.com/shashank-100/wikios
+- [x] .env.example committed (no secrets)
+- [x] vercel.json ready for one-click deploy
+- [ ] Landing page live — deploy ui/ to Vercel (run: `npx vercel` in /wikios)
 - [ ] Demo workspace seeded with sample docs
+- [ ] Record a 60s demo GIF (Loom or Kap) — upload → wiki pages appearing + Q&A
 - [ ] PH listing scheduled for Tuesday 12:01am PST (highest traffic day)
 - [ ] Post in relevant Slack/Discord communities morning of launch
+- [ ] Tag @karpathy on X (LLM Wiki pattern credit)
 - [ ] Email any beta users to upvote
 - [ ] Reply to every comment within first 2 hours
 
