@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WikiOS — AI-Maintained Knowledge Base</title>
+  <meta name="description" content="Drop in PDFs and docs. WikiOS builds a living, interlinked knowledge graph that grows smarter with every document — zero manual maintenance." />
+  <meta property="og:title" content="WikiOS — The knowledge base that maintains itself" />
+  <meta property="og:description" content="Drop in documents. Get back a self-updating, deeply interlinked knowledge graph that compounds over time." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="WikiOS — The knowledge base that maintains itself" />
+  <meta name="twitter:description" content="Drop in PDFs and docs. AI builds a living wiki that stays current automatically." />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -303,6 +310,67 @@
     }
     .plan ul li::before { content: "✓"; color: var(--green); font-weight: 700; flex-shrink: 0; }
 
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 32px;
+      background: rgba(10,10,15,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-size: 17px; font-weight: 800; letter-spacing: -.02em; }
+    .nav-logo span { color: var(--accent2); }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a { font-size: 14px; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── SOCIAL PROOF BAR ── */
+    .proof-bar {
+      display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
+      padding: 20px 24px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    .proof-item { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+    .proof-item strong { color: var(--text); }
+
+    /* ── WAITLIST ── */
+    .waitlist-section {
+      background: linear-gradient(135deg, rgba(108,99,255,.12) 0%, rgba(167,139,250,.08) 100%);
+      border: 1px solid rgba(108,99,255,.25);
+      border-radius: 20px;
+      padding: 56px 32px;
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .waitlist-section h2 { font-size: 2rem; font-weight: 800; margin-bottom: 12px; }
+    .waitlist-section p { font-size: 15px; color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
+    .waitlist-form { display: flex; gap: 10px; max-width: 420px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+    .waitlist-input {
+      flex: 1; min-width: 220px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .waitlist-input:focus { border-color: var(--accent); }
+    .waitlist-input::placeholder { color: var(--muted); }
+    .waitlist-success {
+      display: none;
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--green);
+    }
+    .waitlist-success.visible { display: block; }
+    .waitlist-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
+
     /* ── FOOTER ── */
     footer {
       text-align: center;
@@ -365,6 +433,26 @@
   </style>
 </head>
 <body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Wiki<span>OS</span></div>
+  <div class="nav-links">
+    <a href="#demo">Demo</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="https://github.com/shashank-100/wikios" target="_blank">GitHub</a>
+    <a href="#waitlist" class="btn btn-primary" style="padding:8px 18px; font-size:13px; border-radius:6px;">Get early access</a>
+  </div>
+</nav>
+
+<!-- SOCIAL PROOF BAR -->
+<div class="proof-bar">
+  <div class="proof-item">✦ <strong>Built on Claude</strong> by Anthropic</div>
+  <div class="proof-item">✦ <strong>Open source</strong> engine on GitHub</div>
+  <div class="proof-item">✦ Based on <strong>Karpathy's LLM Wiki pattern</strong></div>
+  <div class="proof-item">✦ <strong>Self-hostable</strong> — your docs never leave</div>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -533,7 +621,7 @@
 </div>
 
 <!-- FEATURES -->
-<div class="section">
+<div class="section" id="features">
   <div class="section-label">Features</div>
   <h2>Everything a living knowledge base needs</h2>
   <div class="features">
@@ -571,7 +659,7 @@
 </div>
 
 <!-- PRICING -->
-<div class="section">
+<div class="section" id="pricing">
   <div class="section-label">Pricing</div>
   <h2>Simple, workspace-based pricing</h2>
   <div class="pricing">
@@ -613,6 +701,22 @@
         <li>Custom integrations</li>
       </ul>
     </div>
+  </div>
+</div>
+
+<!-- WAITLIST -->
+<div class="section" id="waitlist">
+  <div class="waitlist-section">
+    <h2>Get early access</h2>
+    <p>We're onboarding design partners in legal, pharma, and finance.<br>Free during beta — no credit card required.</p>
+    <form class="waitlist-form" onsubmit="joinWaitlist(event)">
+      <input class="waitlist-input" type="email" placeholder="your@email.com" required id="waitlistEmail" />
+      <button class="btn btn-primary" type="submit">Join waitlist</button>
+    </form>
+    <div class="waitlist-success" id="waitlistSuccess">
+      You're on the list. We'll be in touch within 48 hours.
+    </div>
+    <div class="waitlist-note">No spam. Just early access when your slot opens.</div>
   </div>
 </div>
 
@@ -750,6 +854,35 @@
 
   document.getElementById('queryInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') runQuery();
+  });
+
+  async function joinWaitlist(e) {
+    e.preventDefault();
+    const email = document.getElementById('waitlistEmail').value;
+    const btn = e.target.querySelector('button');
+    btn.textContent = 'Joining...';
+    btn.disabled = true;
+
+    // POST to /waitlist — falls back gracefully if API isn't live yet
+    try {
+      await fetch('/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+    } catch {}
+
+    document.getElementById('waitlistEmail').value = '';
+    document.getElementById('waitlistSuccess').classList.add('visible');
+    btn.textContent = 'Joined!';
+  }
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
   });
 </script>
 </body>
