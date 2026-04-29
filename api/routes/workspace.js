@@ -9,7 +9,9 @@ import { enrichWiki } from "../../engine/workflows/enrich.js";
 import { gapAnalysis } from "../../engine/workflows/procedures/gap-analysis.js";
 
 const router = express.Router();
-const upload = multer({ dest: "uploads/" });
+
+// Vercel serverless has a read-only filesystem — use memory storage there
+const upload = multer({ storage: multer.memoryStorage() });
 
 // POST /workspace/:id/ingest — upload one or more documents
 router.post("/:id/ingest", upload.array("files"), async (req, res) => {
@@ -20,27 +22,30 @@ router.post("/:id/ingest", upload.array("files"), async (req, res) => {
     return res.status(400).json({ error: "No files uploaded" });
   }
 
+  // Write buffers to /tmp (writable on Vercel) then ingest from there
+  const tmpDir = path.join("/tmp", `wikios-${Date.now()}`);
+  await fs.mkdir(tmpDir, { recursive: true });
+  const tmpPaths = [];
+
   try {
-    if (files.length === 1) {
-      const result = await ingestDocument({
-        filePath: files[0].path,
-        workspaceDir,
-      });
+    for (const file of files) {
+      const tmpPath = path.join(tmpDir, file.originalname);
+      await fs.writeFile(tmpPath, file.buffer);
+      tmpPaths.push(tmpPath);
+    }
+
+    if (tmpPaths.length === 1) {
+      const result = await ingestDocument({ filePath: tmpPaths[0], workspaceDir });
       res.json({ ok: true, result });
     } else {
-      const result = await batchIngest({
-        filePaths: files.map((f) => f.path),
-        workspaceDir,
-      });
+      const result = await batchIngest({ filePaths: tmpPaths, workspaceDir });
       res.json({ ok: true, result });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
   } finally {
-    // clean up temp upload files
-    for (const file of files) {
-      await fs.unlink(file.path).catch(() => {});
-    }
+    for (const p of tmpPaths) await fs.unlink(p).catch(() => {});
+    await fs.rmdir(tmpDir).catch(() => {});
   }
 });
 
@@ -117,7 +122,8 @@ router.get("/:id/gap-analysis", async (req, res) => {
 });
 
 function getWorkspaceDir(id) {
-  return path.join(process.cwd(), "workspaces", id);
+  const base = process.env.VERCEL === "1" ? "/tmp" : path.join(process.cwd(), "workspaces");
+  return path.join(base, id);
 }
 
 export default router;

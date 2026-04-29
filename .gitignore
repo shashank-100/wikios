@@ -5,3 +5,4 @@ workspaces/
 .DS_Store
 *.log
 waitlist.csv
+.vercel

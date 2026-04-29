@@ -1,6 +1,8 @@
 import fs from "fs/promises";
 import path from "path";
+import { fileURLToPath } from "url";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SECTIONS = ["sources", "concepts", "entities", "analyses", "mocs"];
 
 export async function initWorkspace({ workspaceDir, schema = "default" }) {
@@ -12,7 +14,6 @@ export async function initWorkspace({ workspaceDir, schema = "default" }) {
   }
   await fs.mkdir(path.join(workspaceDir, "raw"), { recursive: true });
 
-  // Seed log and index
   const now = new Date().toISOString();
   await fs.writeFile(
     path.join(wikiDir, "log.md"),
@@ -23,10 +24,10 @@ export async function initWorkspace({ workspaceDir, schema = "default" }) {
     `# Wiki Index\n\n*No pages yet. Upload documents to get started.*\n`
   );
 
-  // Copy schema config
-  const schemaSource = path.join(process.cwd(), "config", "AGENTS.md");
+  // Read config from repo root (works both locally and on Vercel)
+  const schemaSource = path.join(__dirname, "../../config/AGENTS.md");
   const schemaDest = path.join(workspaceDir, "AGENTS.md");
-  await fs.copyFile(schemaSource, schemaDest);
+  await fs.copyFile(schemaSource, schemaDest).catch(() => {});
 
   return { ok: true, workspaceDir };
 }

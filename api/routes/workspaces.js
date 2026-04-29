@@ -11,7 +11,9 @@ router.post("/", express.json(), async (req, res) => {
   if (!name) return res.status(400).json({ error: "name required" });
 
   const id = slugify(name) + "-" + Date.now();
-  const workspaceDir = path.join(process.cwd(), "workspaces", id);
+  // Use /tmp on Vercel (read-only cwd), local workspaces/ otherwise
+  const base = process.env.VERCEL === "1" ? "/tmp" : path.join(process.cwd(), "workspaces");
+  const workspaceDir = path.join(base, id);
 
   try {
     await initWorkspace({ workspaceDir, schema });
@@ -23,7 +25,8 @@ router.post("/", express.json(), async (req, res) => {
 
 // GET /workspaces — list all workspaces
 router.get("/", async (req, res) => {
-  const dir = path.join(process.cwd(), "workspaces");
+  const base = process.env.VERCEL === "1" ? "/tmp" : path.join(process.cwd(), "workspaces");
+  const dir = base;
   try {
     const entries = await fs.readdir(dir, { withFileTypes: true });
     const workspaces = entries
